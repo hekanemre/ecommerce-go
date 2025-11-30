@@ -39,7 +39,7 @@ func (r *productRepo) Create(product *domain.Product) (int64, error) {
 
 // GetByID retrieves a product by its ID
 func (r *productRepo) GetByID(id int64) (*domain.Product, error) {
-	row := r.db.QueryRow("SELECT ProductId, Name, Price, Description FROM Product WHERE ProductId = ?", id)
+	row := r.db.QueryRow("SELECT ID, Name, Price, Description FROM Product WHERE ID = ?", id)
 	p := &domain.Product{}
 	err := row.Scan(&p.ID, &p.Name, &p.Price, &p.Description)
 	if err != nil {
@@ -53,7 +53,7 @@ func (r *productRepo) GetByID(id int64) (*domain.Product, error) {
 
 // GetAll retrieves all products
 func (r *productRepo) GetAll() ([]*domain.Product, error) {
-	rows, err := r.db.Query("SELECT ProductId, Name, Price, Description FROM Product")
+	rows, err := r.db.Query("SELECT ID, Name, Price, Description FROM Product")
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (r *productRepo) GetAll() ([]*domain.Product, error) {
 // Update modifies an existing product
 func (r *productRepo) Update(product *domain.Product) error {
 	_, err := r.db.Exec(
-		"UPDATE Product SET Name = ?, Price = ?, Description = ? WHERE ProductId = ?",
+		"UPDATE Product SET Name = ?, Price = ?, Description = ? WHERE ID = ?",
 		product.Name, product.Price, product.Description, product.ID,
 	)
 	return err
@@ -82,6 +82,6 @@ func (r *productRepo) Update(product *domain.Product) error {
 
 // Delete removes a product by its ID
 func (r *productRepo) Delete(id int64) error {
-	_, err := r.db.Exec("DELETE FROM Product WHERE ProductId = ?", id)
+	_, err := r.db.Exec("DELETE FROM Product WHERE ID = ?", id)
 	return err
 }
