@@ -4,6 +4,7 @@ import (
 	applicationCart "ecommerce-go/application/cart"
 	applicationProduct "ecommerce-go/application/product"
 	applicationUser "ecommerce-go/application/user"
+	"ecommerce-go/config"
 	infrastructure "ecommerce-go/infrastructure/mysql"
 	"log"
 	"net/http"
@@ -11,7 +12,18 @@ import (
 
 func main() {
 
-	dbRepo, err := infrastructure.NewMySQLRepository("appuser", "appuser123", "localhost", "3306", "ECommercial")
+	conf, err := config.LoadConfig()
+	if err != nil {
+		log.Fatalf("Error loading config: %v", err)
+	}
+
+	dbRepo, err := infrastructure.NewMySQLRepository(
+		conf.DB.User,
+		conf.DB.Password,
+		conf.DB.Host,
+		conf.DB.Port,
+		conf.DB.Database,
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
